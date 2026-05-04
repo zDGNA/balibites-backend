@@ -9,7 +9,7 @@ COPY requirements.txt .
 
 # CPU-only torch DULU — potong image dari 2.6GB → ~800MB
 RUN pip install --no-cache-dir \
-    + torch==2.6.0+cpu \
+    torch==2.6.0+cpu \
     --index-url https://download.pytorch.org/whl/cpu
 
 RUN pip install --no-cache-dir -r requirements.txt
