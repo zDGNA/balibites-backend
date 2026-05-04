@@ -2,16 +2,42 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends gcc \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY requirements.txt .
+
+# CPU-only torch DULU — potong image dari 2.6GB → ~800MB
+RUN pip install --no-cache-dir \
+    torch==2.2.2+cpu \
+    --index-url https://download.pytorch.org/whl/cpu
+
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy semua file aplikasi
+# Copy semua file (termasuk .csv dan .npy)
 COPY . .
 
-# Railway akan memberikan port secara dinamis, 
-# jadi kita tidak perlu EXPOSE angka spesifik, tapi ini opsional sebagai dokumentasi
-EXPOSE 8000
+# Bake model ke /app/model saat BUILD — startup tidak perlu download
+# Model: firqaaa/indo-sentence-bert-base (~100MB, ringan)
+RUN python - << 'PYEOF'
+from sentence_transformers import SentenceTransformer
+import os
 
-# Jalankan server dengan variabel $PORT
+MODEL_ID  = "firqaaa/indo-sentence-bert-base"
+SAVE_PATH = "/app/model"
+
+print(f"Downloading {MODEL_ID} ...")
+m = SentenceTransformer(MODEL_ID)
+m.save(SAVE_PATH)
+
+# Verifikasi
+files = os.listdir(SAVE_PATH)
+print(f"Saved files: {files}")
+
+m2   = SentenceTransformer(SAVE_PATH)
+test = m2.encode(["test bali"])
+print(f"Verify OK — shape: {test.shape}")
+PYEOF
+
+EXPOSE 8000
 CMD ["python", "main.py"]
