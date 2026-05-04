@@ -21,8 +21,8 @@ from typing import Optional
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Sesuaikan dengan nama file hasil generate di Notebook tadi
-VECTORS_PATH = os.path.join(BASE_DIR, "Balibites_Data", "balibites_indobert_vectors.npy")
-CSV_PATH     = os.path.join(BASE_DIR, "Balibites_Data", "balibites_processed.csv")
+VECTORS_PATH = os.path.join(BASE_DIR, "balibites_indobert_vectors.npy")
+CSV_PATH     = os.path.join(BASE_DIR, "balibites_processed.csv")
 
 # Model path tetap menggunakan HuggingFace (online download sekali)
 MODEL_NAME   = 'sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2'
@@ -40,7 +40,7 @@ app.add_middleware(
 print("🔄 Memuat model dan data BaliBites...")
 
 # Memastikan model menggunakan nama yang konsisten
-model = SentenceTransformer('sentence-transformers/paraphrase-multilingual-mpnet-base-v2')
+model = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
 
 # Load data lokal
 if os.path.exists(VECTORS_PATH) and os.path.exists(CSV_PATH):
@@ -137,8 +137,7 @@ class ChatRequest(BaseModel):
 # ── Endpoints ─────────────────────────────────────────────────
 @app.get("/health")
 def health():
-    return {"status": "ok", "restaurants": len(df)}
-
+    return {"status": "ok"} 
 
 @app.post("/recommend")
 def recommend(req: RecommendRequest):
@@ -280,3 +279,10 @@ def chat(req: ChatRequest):
         top_n=5
     ))
     return {"intent": "REKOMENDASI", **rec}
+
+
+if __name__ == "__main__":
+    import uvicorn
+    # Ambil port dari environment Railway, default ke 8000 jika lokal
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
