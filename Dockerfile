@@ -9,7 +9,7 @@ COPY requirements.txt .
 
 # CPU-only torch DULU — potong image dari 2.6GB → ~800MB
 RUN pip install --no-cache-dir \
-    torch==2.2.2+cpu \
+    + torch==2.6.0+cpu \
     --index-url https://download.pytorch.org/whl/cpu
 
 RUN pip install --no-cache-dir -r requirements.txt
@@ -23,7 +23,7 @@ RUN python - << 'PYEOF'
 from sentence_transformers import SentenceTransformer
 import os
 
-MODEL_ID  = "firqaaa/indo-sentence-bert-base"
+MODEL_ID = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 SAVE_PATH = "/app/model"
 
 print(f"Downloading {MODEL_ID} ...")
