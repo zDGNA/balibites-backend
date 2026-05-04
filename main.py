@@ -25,7 +25,7 @@ VECTORS_PATH = os.path.join(BASE_DIR, "balibites_indobert_vectors.npy")
 CSV_PATH     = os.path.join(BASE_DIR, "balibites_processed.csv")
 
 # Model path tetap menggunakan HuggingFace (online download sekali)
-MODEL_NAME   = 'sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2'
+MODEL_NAME = 'paraphrase-multilingual-MiniLM-L12-v2'
 # ── App ───────────────────────────────────────────────────────
 app = FastAPI(title="BaliBites API", version="1.0.0")
 
@@ -40,7 +40,7 @@ app.add_middleware(
 print("🔄 Memuat model dan data BaliBites...")
 
 # Memastikan model menggunakan nama yang konsisten
-model = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
+model = SentenceTransformer(MODEL_NAME)
 
 # Load data lokal
 if os.path.exists(VECTORS_PATH) and os.path.exists(CSV_PATH):
