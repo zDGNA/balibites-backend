@@ -17,16 +17,14 @@ from sentence_transformers import SentenceTransformer
 from typing import Optional
 
 # ── Config ────────────────────────────────────────────────────
-# Mengambil path folder 'backend' tempat main.py berada
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-# Sesuaikan dengan nama file hasil generate di Notebook tadi
-VECTORS_PATH = os.path.join(BASE_DIR, "balibites_indobert_vectors.npy")
-CSV_PATH     = os.path.join(BASE_DIR, "balibites_processed.csv")
-
-# Model path tetap menggunakan HuggingFace (online download sekali)
-MODEL_NAME = 'paraphrase-multilingual-MiniLM-L12-v2'
+# Jika main.py ada di dalam folder /backend, maka file .npy ada satu tingkat di atasnya
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) 
+MODEL_NAME = 'indobenchmark/indobert-base-p1'
+# Mengambil path dari dashboard Railway atau fallback ke root project
+VECTORS_PATH = os.getenv("VECTORS_PATH", os.path.join(os.path.dirname(__file__), "../balibites_indobert_vectors.npy"))
+CSV_PATH     = os.getenv("CSV_PATH", os.path.join(os.path.dirname(__file__), "../balibites_processed.csv"))
 # ── App ───────────────────────────────────────────────────────
+
 app = FastAPI(title="BaliBites API", version="1.0.0")
 
 app.add_middleware(
