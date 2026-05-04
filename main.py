@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODEL_NAME = 'indobenchmark/indobert-base-p1'
 # Mengambil path dari dashboard Railway atau fallback ke root project
 VECTORS_PATH = os.getenv("VECTORS_PATH", os.path.join(os.path.dirname(__file__), "../balibites_indobert_vectors.npy"))
-CSV_PATH     = os.getenv("CSV_PATH", os.path.join(os.path.dirname(__file__), "../balibites_processed.csv"))
+CSV_PATH     = os.getenv("CSV_PATH", os.path.join(os.path.dirname(__file__), "../balibites_ready_to_embed.csv"))
 # ── App ───────────────────────────────────────────────────────
 
 app = FastAPI(title="BaliBites API", version="1.0.0")
