@@ -353,7 +353,6 @@ def recommend(req: RecommendRequest):
 
 @app.get("/detail/{nama}")
 def detail(nama: str):
-    # Decode URL-encoded name (FastAPI biasanya auto-decode, tapi pastikan)
     import urllib.parse
     nama_decoded = urllib.parse.unquote(nama)
     
